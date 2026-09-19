@@ -35,6 +35,7 @@ const UserCard = ({
                 )}
             </div>
             <input
+                name="users"
                 type={size === "small" ? "checkbox" : "hidden"}
                 value={user.steamid}
                 checked={checkBox}

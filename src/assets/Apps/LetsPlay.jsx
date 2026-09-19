@@ -19,6 +19,50 @@ const LetsPlay = () => {
         setFriends(fiends.friendslist.friends);
     };
 
+    const getCommonGames = async (e) => {
+        const form = e.target;
+        const formData = new FormData(form);
+
+        // récup des tag amis sélectionées
+        const selectedUsersIds = formData.getAll("users");
+
+        const selfLibrary = await fetch(
+            `/steam_api/IPlayerService/GetOwnedGames/v0001/?steamid=${selfID.current.value}&include_played_free_games=true&include_appinfo=true&format=json`,
+        );
+
+        const selfGames = await selfLibrary
+            .json()
+            .then((data) => data.response?.games ?? []);
+        const selfGamesIds = selfGames.map((game) => game.appid);
+
+        const friendsLibraries = await Promise.all(
+            selectedUsersIds.map(async (friendId) => {
+                const response = await fetch(
+                    `/steam_api/IPlayerService/GetOwnedGames/v0001/?steamid=${friendId}&include_played_free_games=true&format=json&json=${encodeURIComponent(JSON.stringify({ appids_filter: selfGamesIds }))}`,
+                );
+                const data = await response.json();
+                return (data.response?.games ?? []).map((game) => game.appid);
+            }),
+        );
+
+        const commonGamesIds =
+            selectedUsersIds.length === 0
+                ? []
+                : friendsLibraries.reduce(
+                      (commonIds, friendGamesIds) =>
+                          commonIds.filter((id) => friendGamesIds.includes(id)),
+                      selfGamesIds,
+                  );
+
+        console.log(commonGamesIds);
+
+        const commonGamesInfos = selfGames.filter((game) =>
+            commonGamesIds.includes(game.appid),
+        );
+
+        console.log(commonGamesInfos);
+    };
+
     useEffect(() => {
         if (friendsIDs.length === 0) return;
 
@@ -30,7 +74,12 @@ const LetsPlay = () => {
             console.log(
                 users.players
                     .filter((player) => player.steamid !== selfID.current.value)
-                    .sort((a, b) => a.personaname - b.personaname),
+                    .sort((a, b) =>
+                        a.personaname.toLowerCase().trim() <
+                        b.personaname.toLowerCase().trim()
+                            ? -1
+                            : 1,
+                    ),
             );
             setSelfUser(
                 users.players.find(
@@ -76,14 +125,23 @@ const LetsPlay = () => {
                     </section>
                     <section className="letsPlay__resuslt">
                         <div className="letsPlay__friends">
-                            <form>
-                                <input
-                                    type="text"
-                                    title="search"
-                                    value={sort}
-                                    onChange={(e) => setSort(e.target.value)}
-                                    className="user_cards_filter"
-                                />
+                            <form
+                                onSubmit={(e) => {
+                                    e.preventDefault();
+                                    getCommonGames(e);
+                                }}
+                            >
+                                <div className="user_cards_filter">
+                                    <input
+                                        type="text"
+                                        title="search"
+                                        value={sort}
+                                        onChange={(e) =>
+                                            setSort(e.target.value)
+                                        }
+                                    />
+                                    <button type="submit">reload</button>
+                                </div>
                                 {friendsUsers.map((friend) => {
                                     const search = sort.toLowerCase().trim();
 
