@@ -24,6 +24,14 @@ export default defineConfig((mode) => {
                     },
                     cors: false,
                 },
+                "/letsplay_steam_game_image": {
+                    target: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps",
+                    changeOrigin: true,
+                    rewrite: (path) => {
+                        path = path.replace(/^\/letsplay_steam_game_image/, "");
+                    },
+                    cors: false,
+                },
             },
         },
     };

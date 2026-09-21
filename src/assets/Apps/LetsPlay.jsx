@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import GameCard from "../Components/GameCard";
 import UserCard from "../Components/UserCard";
 
 const LetsPlay = () => {
@@ -7,6 +8,8 @@ const LetsPlay = () => {
 
     const [selfUser, setSelfUser] = useState(null);
     const [friendsUsers, setFriendsUsers] = useState([]);
+    const [commonGames, setCommonGames] = useState([]);
+    const [gameImageStatuses, setGameImageStatuses] = useState({});
 
     const [sort, setSort] = useState("");
 
@@ -61,6 +64,15 @@ const LetsPlay = () => {
         );
 
         console.log(commonGamesInfos);
+        setGameImageStatuses({});
+        setCommonGames(commonGamesInfos);
+    };
+
+    const handleGameImageStatusChange = (appid, status) => {
+        setGameImageStatuses((currentStatuses) => ({
+            ...currentStatuses,
+            [appid]: status,
+        }));
     };
 
     useEffect(() => {
@@ -168,6 +180,49 @@ const LetsPlay = () => {
                                     );
                                 })}
                             </form>
+                        </div>
+                        <div>
+                            <div className="letsPlay__Games">
+                                {commonGames
+                                    .filter(
+                                        (game) =>
+                                            !["icon-only", "none"].includes(
+                                                gameImageStatuses[game.appid],
+                                            ),
+                                    )
+                                    .map((game) => (
+                                        <GameCard
+                                            key={game.appid}
+                                            infos={game}
+                                            onImageStatusChange={
+                                                handleGameImageStatusChange
+                                            }
+                                        />
+                                    ))}
+                            </div>
+                            {commonGames.some((game) =>
+                                ["icon-only", "none"].includes(
+                                    gameImageStatuses[game.appid],
+                                ),
+                            ) && (
+                                <div className="letsPlay__Games letsPlay__Games--without-cover">
+                                    {commonGames
+                                        .filter((game) =>
+                                            ["icon-only", "none"].includes(
+                                                gameImageStatuses[game.appid],
+                                            ),
+                                        )
+                                        .map((game) => (
+                                            <GameCard
+                                                key={game.appid}
+                                                infos={game}
+                                                onImageStatusChange={
+                                                    handleGameImageStatusChange
+                                                }
+                                            />
+                                        ))}
+                                </div>
+                            )}
                         </div>
                     </section>
                 </>
