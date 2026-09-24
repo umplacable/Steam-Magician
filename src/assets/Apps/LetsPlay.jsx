@@ -9,7 +9,6 @@ const LetsPlay = () => {
     const [selfUser, setSelfUser] = useState(null);
     const [friendsUsers, setFriendsUsers] = useState([]);
     const [commonGames, setCommonGames] = useState([]);
-    const [gameImageStatuses, setGameImageStatuses] = useState({});
 
     const [sort, setSort] = useState("");
 
@@ -64,15 +63,7 @@ const LetsPlay = () => {
         );
 
         console.log(commonGamesInfos);
-        setGameImageStatuses({});
         setCommonGames(commonGamesInfos);
-    };
-
-    const handleGameImageStatusChange = (appid, status) => {
-        setGameImageStatuses((currentStatuses) => ({
-            ...currentStatuses,
-            [appid]: status,
-        }));
     };
 
     useEffect(() => {
@@ -124,7 +115,10 @@ const LetsPlay = () => {
                     <h1>
                         Lets<span className="degrade">Play</span>
                     </h1>
-                    <p>Des outils suplémentaires pour les joueurs Steam.</p>
+                    <p>
+                        Entre ton identifiant Steam et regarde les jeux que tu a
+                        en commun avec tes amis.
+                    </p>
                 </div>
             </section>
             <section className="letsPlay__recherche">
@@ -202,9 +196,6 @@ const LetsPlay = () => {
                                         <GameCard
                                             key={game.appid}
                                             infos={game}
-                                            onImageStatusChange={
-                                                handleGameImageStatusChange
-                                            }
                                         />
                                     ))}
                                 </div>

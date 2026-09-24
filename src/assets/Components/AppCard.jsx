@@ -18,6 +18,7 @@ const AppCard = ({
                 <img src={`../img/${app.image_logo}`} alt={app.name} />
             </div>
             <div className="app_content">
+                {/** biome-ignore lint/security/noDangerouslySetInnerHtml: It' a Controled injection */}
                 <h2 dangerouslySetInnerHTML={{ __html: app.name }} />
                 <p>{app.description}</p>
             </div>

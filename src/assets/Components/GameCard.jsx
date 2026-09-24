@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { StaticImages } from "../Constantes/StaticImages";
 
-const GameCard = ({ infos, onImageStatusChange }) => {
+const GameCard = ({ infos }) => {
     const imageSources = [
         `https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/${infos.appid}/header.jpg`,
         StaticImages[infos.appid],
@@ -9,22 +9,10 @@ const GameCard = ({ infos, onImageStatusChange }) => {
     ];
 
     const [imageSourceIndex, setImageSourceIndex] = useState(0);
-    const statusReported = useRef(false);
 
     useEffect(() => {
         setImageSourceIndex(0);
-        statusReported.current = false;
     }, [infos.appid]);
-
-    const handleImageLoad = () => {
-        if (statusReported.current) return;
-
-        statusReported.current = true;
-        onImageStatusChange?.(
-            infos.appid,
-            imageSourceIndex < 2 ? "cover" : "icon-only",
-        );
-    };
 
     const handleImageError = () => {
         if (imageSourceIndex < 2) {
@@ -34,12 +22,6 @@ const GameCard = ({ infos, onImageStatusChange }) => {
             } else {
                 setImageSourceIndex((currentIndex) => currentIndex + 1);
             }
-            return;
-        }
-
-        if (!statusReported.current) {
-            statusReported.current = true;
-            onImageStatusChange?.(infos.appid, "none");
         }
     };
 
@@ -51,7 +33,6 @@ const GameCard = ({ infos, onImageStatusChange }) => {
             <img
                 src={gameImage}
                 alt={infos.name}
-                onLoad={handleImageLoad}
                 onError={handleImageError}
                 width={imageSourceIndex <= 1 ? "460px" : ""}
                 height={imageSourceIndex <= 1 ? "215px" : ""}
