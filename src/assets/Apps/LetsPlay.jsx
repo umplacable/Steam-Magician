@@ -114,6 +114,19 @@ const LetsPlay = () => {
 
     return (
         <div className="letsPlay">
+            <section id="center">
+                <div className="hero">
+                    <img
+                        src="./img/LetsPlay_Logo.png"
+                        className="base"
+                        alt=""
+                    />
+                    <h1>
+                        Lets<span className="degrade">Play</span>
+                    </h1>
+                    <p>Des outils suplémentaires pour les joueurs Steam.</p>
+                </div>
+            </section>
             <section className="letsPlay__recherche">
                 <form
                     onSubmit={(e) => {
@@ -138,6 +151,7 @@ const LetsPlay = () => {
                     <section className="letsPlay__resuslt">
                         <div className="letsPlay__friends">
                             <form
+                                id="friend form"
                                 onSubmit={(e) => {
                                     e.preventDefault();
                                     getCommonGames(e);
@@ -181,16 +195,10 @@ const LetsPlay = () => {
                                 })}
                             </form>
                         </div>
-                        <div>
-                            <div className="letsPlay__Games">
-                                {commonGames
-                                    .filter(
-                                        (game) =>
-                                            !["icon-only", "none"].includes(
-                                                gameImageStatuses[game.appid],
-                                            ),
-                                    )
-                                    .map((game) => (
+                        <div style={{ flex: 1 }}>
+                            {commonGames.length > 0 ? (
+                                <div className="letsPlay__Games">
+                                    {commonGames.map((game) => (
                                         <GameCard
                                             key={game.appid}
                                             infos={game}
@@ -199,28 +207,18 @@ const LetsPlay = () => {
                                             }
                                         />
                                     ))}
-                            </div>
-                            {commonGames.some((game) =>
-                                ["icon-only", "none"].includes(
-                                    gameImageStatuses[game.appid],
-                                ),
-                            ) && (
-                                <div className="letsPlay__Games letsPlay__Games--without-cover">
-                                    {commonGames
-                                        .filter((game) =>
-                                            ["icon-only", "none"].includes(
-                                                gameImageStatuses[game.appid],
-                                            ),
-                                        )
-                                        .map((game) => (
-                                            <GameCard
-                                                key={game.appid}
-                                                infos={game}
-                                                onImageStatusChange={
-                                                    handleGameImageStatusChange
-                                                }
-                                            />
-                                        ))}
+                                </div>
+                            ) : (
+                                <div>
+                                    <div>
+                                        <p>Sélectionner des amis</p>
+                                        <button
+                                            form="friend form"
+                                            type="submit"
+                                        >
+                                            Reload
+                                        </button>
+                                    </div>
                                 </div>
                             )}
                         </div>

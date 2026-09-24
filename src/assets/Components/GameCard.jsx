@@ -1,11 +1,10 @@
 import { useEffect, useRef, useState } from "react";
+import { StaticImages } from "../Constantes/StaticImages";
 
 const GameCard = ({ infos, onImageStatusChange }) => {
     const imageSources = [
         `https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/${infos.appid}/header.jpg`,
-        `https://cdn.cloudflare.steamstatic.com/steam/apps/${infos.appid}/header.jpg`,
-        `https://cdn.cloudflare.steamstatic.com/steam/apps/${infos.appid}/capsule_616x353.jpg`,
-        `https://cdn.cloudflare.steamstatic.com/steam/apps/${infos.appid}/capsule_231x87.jpg`,
+        StaticImages[infos.appid],
         `https://media.steampowered.com/steamcommunity/public/images/apps/${infos.appid}/${infos.img_icon_url}.jpg`,
     ];
 
@@ -23,13 +22,18 @@ const GameCard = ({ infos, onImageStatusChange }) => {
         statusReported.current = true;
         onImageStatusChange?.(
             infos.appid,
-            imageSourceIndex < 4 ? "cover" : "icon-only",
+            imageSourceIndex < 2 ? "cover" : "icon-only",
         );
     };
 
     const handleImageError = () => {
-        if (imageSourceIndex < 4) {
-            setImageSourceIndex((currentIndex) => currentIndex + 1);
+        if (imageSourceIndex < 2) {
+            console.log(StaticImages[infos.appid] === undefined);
+            if (StaticImages[infos.appid] === undefined) {
+                setImageSourceIndex((currentIndex) => currentIndex + 2);
+            } else {
+                setImageSourceIndex((currentIndex) => currentIndex + 1);
+            }
             return;
         }
 
@@ -49,6 +53,8 @@ const GameCard = ({ infos, onImageStatusChange }) => {
                 alt={infos.name}
                 onLoad={handleImageLoad}
                 onError={handleImageError}
+                width={imageSourceIndex <= 1 ? "460px" : ""}
+                height={imageSourceIndex <= 1 ? "215px" : ""}
             />
 
             <h4>{infos.name}</h4>

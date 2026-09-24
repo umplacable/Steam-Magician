@@ -55,26 +55,15 @@
         z-index: 0;
     }
 
-    .framework,
-    .vite {
-        position: absolute;
-    }
-
-    .framework {
-        z-index: 1;
-        top: 34px;
-        height: 28px;
-        transform: perspective(2000px) rotateZ(300deg) rotateX(44deg)
-            rotateY(39deg) scale(1.4);
-    }
-
-    .vite {
-        z-index: 0;
-        top: 107px;
-        height: 26px;
-        width: auto;
-        transform: perspective(2000px) rotateZ(300deg) rotateX(40deg)
-            rotateY(39deg) scale(0.8);
+    .degrade {
+        background: linear-gradient(
+            120deg,
+            #2a93fd 0%,
+            #5b59f7 25%,
+            #f534d6 85%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
     }
 }
 
@@ -249,7 +238,7 @@
     }
 
     .app_content {
-        h3 {
+        h2 {
             font-size: 18px;
             font-weight: bold;
             margin-bottom: 10px;
@@ -350,6 +339,10 @@
     background-color: var(--card-bg);
     box-shadow: var(--shadow);
     gap: 10px;
+
+    h4 {
+        margin-bottom: calc(1.33em - 10px);
+    }
 }
 
 /* User list */
@@ -399,10 +392,8 @@
         width: fit-content;
     }
 
-    &--without-cover {
-        margin-top: 30px;
-        padding-top: 20px;
-        border-top: 1px solid var(--border);
+    &.--without-cover {
+        margin-top: 10px;
 
         h3 {
             flex-basis: 100%;

@@ -18,7 +18,7 @@ const AppCard = ({
                 <img src={`../img/${app.image_logo}`} alt={app.name} />
             </div>
             <div className="app_content">
-                <h3 dangerouslySetInnerHTML={{ __html: app.name }} />
+                <h2 dangerouslySetInnerHTML={{ __html: app.name }} />
                 <p>{app.description}</p>
             </div>
         </Link>
